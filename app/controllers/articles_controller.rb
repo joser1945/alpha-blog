@@ -1,51 +1,62 @@
 class ArticlesController < ApplicationController
-    def show
-      # byebug
-      # this allows us to look at the params in the server console and to check for any bugs
-      @article = Article.find(params[:id])
-      # this linne of code is the correct way to look for the articles inside of the database table
-      # make sure to do the same lines of code from the rails console but to add an "@" before the variable to initialize it and to put 
-      # params with the square brackets and the id attribute with the semicolon in front
-    end
+  before_action :set_article, only: [:show, :edit, :update, :destroy]
+  
 
-    def index
-      @articles = Article.all
-    end
+  def show
+    # byebug
+    # this allows us to look at the params in the server console and to check for any bugs
+    # @article = Article.find(params[:id])
+    # this linne of code is the correct way to look for the articles inside of the database table
+    # make sure to do the same lines of code from the rails console but to add an "@" before the variable to initialize it and to put 
+    # params with the square brackets and the id attribute with the semicolon in front
+  end
 
-    def new
-      @article = Article.new
-    end
+  def index
+    @articles = Article.all
+  end
 
-    def edit
-      @article = Article.find(params[:id])
-    end
+  def new
+    @article = Article.new
+  end
 
-    def create
-      # render plain: params[:article]
-      # this renders it to be displayed on the articles browser screen
-      @article = Article.new(params.require(:article).permit(:title, :description))
-      if @article.save
-        flash[:notice] = "Article was created successfully."
-        redirect_to article_path(@article)
-        # you can use the shorter path "redirect_to @article"
-      else
-        render 'new'
-      end
-    end
+  def edit
+  end
 
-    def update
-        @article = Article.find(params[:id])
-        if @article.update(params.require(:article).permit(:title, :description))
-          flash[:notice] = "Article was updated successfully"
-          redirect_to @article
-        else
-          render 'edit'
-        end
+  def create
+    # render plain: params[:article]
+    # this renders it to be displayed on the articles browser screen
+    @article = Article.new(article_params)
+    if @article.save
+      flash[:notice] = "Article was created successfully."
+      redirect_to article_path(@article)
+      # you can use the shorter path "redirect_to @article"
+    else
+      render 'new'
     end
+  end
 
-    def destroy
-        @article = Article.find(params[:id])
-        @article.destroy
-        redirect_to articles_path
+  def update
+    if @article.update(article_params)
+      flash[:notice] = "Article was updated successfully"
+      redirect_to @article
+    else
+      render 'edit'
     end
+  end
+
+  def destroy
+    @article.destroy
+    redirect_to articles_path
+  end
+
+  private
+
+  def set_article
+    @article = Article.find(params[:id])
+  end
+
+  def article_params
+    params.require(:article).permit(:title, :description)
+  end
+
 end
