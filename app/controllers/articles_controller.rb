@@ -1,14 +1,45 @@
 class ArticlesController < ApplicationController
     def show
-        # byebug
-        # this allows us to look at the params in the server console and to check for any bugs
-        @article = Article.find(params[:id])
-        # this linne of code is the correct way to look for the articles inside of the database table
-        # make sure to do the same lines of code from the rails console but to add an "@" before the variable to initialize it and to put 
-        # params with the square brackets and the id attribute with the semicolon in front
+      # byebug
+      # this allows us to look at the params in the server console and to check for any bugs
+      @article = Article.find(params[:id])
+      # this linne of code is the correct way to look for the articles inside of the database table
+      # make sure to do the same lines of code from the rails console but to add an "@" before the variable to initialize it and to put 
+      # params with the square brackets and the id attribute with the semicolon in front
     end
 
     def index
-        @articles = Article.all
+      @articles = Article.all
+    end
+
+    def new
+      @article = Article.new
+    end
+
+    def edit
+      @article = Article.find(params[:id])
+    end
+
+    def create
+      # render plain: params[:article]
+      # this renders it to be displayed on the articles browser screen
+      @article = Article.new(params.require(:article).permit(:title, :description))
+      if @article.save
+        flash[:notice] = "Article was created successfully."
+        redirect_to article_path(@article)
+        # you can use the shorter path "redirect_to @article"
+      else
+        render 'new'
+      end
+    end
+
+    def update
+        @article = Article.find(params[:id])
+        if @article.update(params.require(:article).permit(:title, :description))
+          flash[:notice] = "Article was updated successfully"
+          redirect_to @article
+        else
+          render 'edit'
+        end
     end
 end
