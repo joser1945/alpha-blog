@@ -31,7 +31,7 @@
         <br>
 
         <div class="form-group row justify-content-center">
-          <%= f.submit "Sign up", class: "btn col-4 btn-outline-light btn-lg" %>
+          <%= f.submit(@user.new_record? ? "Sign up" : "Update account", class: "btn col-4 btn-outline-light btn-lg") %>
         </div>
       <% end %>
       <%= link_to '[ Cancel and return to home page ]', root_path, id: "article-listing-button", class: "text-info" %>
